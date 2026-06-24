@@ -1,0 +1,324 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==================== UTILISATEURS & RÔLES ====================
+enum Role {
+  ADMIN
+  ENSEIGNANT
+  PARENT
+  ELEVE
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  nom       String
+  prenom    String
+  role      Role
+  telephone String?
+  photo     String?
+  actif     Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  enseignant Enseignant?
+  parent     Parent?
+  eleve      Eleve?
+
+  messagesEnvoyes Message[]      @relation("Expediteur")
+  messagesRecus   Message[]      @relation("Destinataire")
+  notifications   Notification[]
+  logsConnexion   LogConnexion[]
+}
+
+model Enseignant {
+  id          String               @id @default(cuid())
+  userId      String               @unique
+  user        User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  specialite  String?
+  matieres    Matiere[]
+  classes     ClasseEnseignant[]
+  cours       Cours[]
+  devoirs     Devoir[]
+  notes       Note[]
+}
+
+model Parent {
+  id        String     @id @default(cuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  enfants   Eleve[]
+  paiements Paiement[]
+}
+
+model Eleve {
+  id            String       @id @default(cuid())
+  userId        String       @unique
+  user          User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  matricule     String       @unique
+  dateNaissance DateTime?
+  lieuNaissance String?
+  adresse       String?
+  telephone     String?
+  classeId      String?
+  classe        Classe?      @relation(fields: [classeId], references: [id])
+  parentId      String?
+  parent        Parent?      @relation(fields: [parentId], references: [id])
+  notes         Note[]
+  absences      Absence[]
+  bulletins     Bulletin[]
+  soumissions   Soumission[]
+}
+
+enum Niveau {
+  PRESCOLAIRE
+  PRIMAIRE
+  COLLEGE
+  LYCEE
+}
+
+model Classe {
+  id            String       @id @default(cuid())
+  nom           String
+  niveau        Niveau
+  anneeScolaire String
+  eleves        Eleve[]
+  enseignants   ClasseEnseignant[]
+  cours         Cours[]
+  devoirs       Devoir[]
+  createdAt     DateTime     @default(now())
+}
+
+model Matiere {
+  id           String               @id @default(cuid())
+  nom          String
+  code         String?              @unique
+  coefficient  Float                @default(1)
+  enseignantId String?
+  enseignant   Enseignant?          @relation(fields: [enseignantId], references: [id])
+  cours        Cours[]
+  devoirs      Devoir[]
+  notes        Note[]
+  classes      ClasseEnseignant[]
+}
+
+model ClasseEnseignant {
+  id           String   @id @default(cuid())
+  classeId     String
+  enseignantId String
+  matiereId    String
+  createdAt    DateTime @default(now())
+
+  classe     Classe     @relation(fields: [classeId], references: [id], onDelete: Cascade)
+  enseignant Enseignant @relation(fields: [enseignantId], references: [id], onDelete: Cascade)
+  matiere    Matiere    @relation(fields: [matiereId], references: [id], onDelete: Cascade)
+
+  @@unique([classeId, enseignantId, matiereId])
+}
+
+model Cours {
+  id           String     @id @default(cuid())
+  titre        String
+  description  String?
+  fichierUrl   String
+  matiereId    String
+  matiere      Matiere    @relation(fields: [matiereId], references: [id])
+  classeId     String
+  classe       Classe     @relation(fields: [classeId], references: [id])
+  enseignantId String
+  enseignant   Enseignant @relation(fields: [enseignantId], references: [id])
+  createdAt    DateTime   @default(now())
+}
+
+model Devoir {
+  id           String       @id @default(cuid())
+  titre        String
+  description  String
+  fichierUrl   String?
+  dateLimite   DateTime
+  matiereId    String
+  matiere      Matiere      @relation(fields: [matiereId], references: [id])
+  classeId     String
+  classe       Classe       @relation(fields: [classeId], references: [id])
+  enseignantId String
+  enseignant   Enseignant   @relation(fields: [enseignantId], references: [id])
+  soumissions  Soumission[]
+  createdAt    DateTime     @default(now())
+}
+
+model Soumission {
+  id          String   @id @default(cuid())
+  devoirId    String
+  devoir      Devoir   @relation(fields: [devoirId], references: [id])
+  eleveId     String
+  eleve       Eleve    @relation(fields: [eleveId], references: [id])
+  fichierUrl  String
+  note        Float?
+  commentaire String?
+  soumisLe    DateTime @default(now())
+}
+
+enum TypeEvaluation {
+  CONTROLE
+  EXAMEN
+  DEVOIR
+  ORAL
+}
+
+model Note {
+  id           String         @id @default(cuid())
+  valeur       Float
+  type         TypeEvaluation
+  trimestre    Int
+  eleveId      String
+  eleve        Eleve          @relation(fields: [eleveId], references: [id])
+  matiereId    String
+  matiere      Matiere        @relation(fields: [matiereId], references: [id])
+  enseignantId String
+  enseignant   Enseignant     @relation(fields: [enseignantId], references: [id])
+  createdAt    DateTime       @default(now())
+}
+
+model Bulletin {
+  id            String   @id @default(cuid())
+  eleveId       String
+  eleve         Eleve    @relation(fields: [eleveId], references: [id])
+  trimestre     Int
+  anneeScolaire String
+  fichierUrl    String
+  moyenneGen    Float?
+  createdAt     DateTime @default(now())
+}
+
+model Absence {
+  id        String   @id @default(cuid())
+  eleveId   String
+  eleve     Eleve    @relation(fields: [eleveId], references: [id])
+  date      DateTime
+  justifiee Boolean  @default(false)
+  motif     String?
+  createdAt DateTime @default(now())
+}
+
+model Paiement {
+  id          String   @id @default(cuid())
+  parentId    String
+  parent      Parent   @relation(fields: [parentId], references: [id])
+  montant     Float
+  description String
+  statut      String   @default("EN_ATTENTE")
+  date        DateTime @default(now())
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  sujet          String?
+  contenu        String
+  expediteurId   String
+  expediteur     User     @relation("Expediteur", fields: [expediteurId], references: [id])
+  destinataireId String
+  destinataire   User     @relation("Destinataire", fields: [destinataireId], references: [id])
+  lu             Boolean  @default(false)
+  createdAt      DateTime @default(now())
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  titre     String
+  contenu   String
+  lu        Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+// ==================== CMS - SITE PUBLIC ====================
+model Article {
+  id        String   @id @default(cuid())
+  titre     String
+  slug      String   @unique
+  contenu   String
+  imageUrl  String?
+  categorie String
+  publie    Boolean  @default(false)
+  auteur    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Evenement {
+  id          String    @id @default(cuid())
+  titre       String
+  description String
+  dateDebut   DateTime
+  dateFin     DateTime?
+  lieu        String?
+  imageUrl    String?
+  createdAt   DateTime  @default(now())
+}
+
+model GalerieItem {
+  id        String   @id @default(cuid())
+  titre     String
+  type      String
+  url       String
+  album     String?
+  createdAt DateTime @default(now())
+}
+
+model MembreEquipe {
+  id     String  @id @default(cuid())
+  nom    String
+  prenom String
+  poste  String
+  photo  String?
+  bio    String?
+  ordre  Int     @default(0)
+}
+
+model PageContenu {
+  id        String   @id @default(cuid())
+  cle       String   @unique
+  titre     String?
+  contenu   String
+  updatedAt DateTime @updatedAt
+}
+
+model Preinscription {
+  id            String    @id @default(cuid())
+  nomEleve      String
+  prenomEleve   String
+  dateNaissance DateTime?
+  niveau        Niveau
+  nomParent     String
+  emailParent   String
+  telephone     String
+  message       String?
+  statut        String    @default("NOUVEAU")
+  createdAt     DateTime  @default(now())
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  nom       String
+  email     String
+  sujet     String
+  message   String
+  lu        Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model LogConnexion {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  ip        String?
+  userAgent String?
+  createdAt DateTime @default(now())
+}
