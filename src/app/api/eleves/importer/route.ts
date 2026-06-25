@@ -50,7 +50,9 @@ export async function POST(req: NextRequest) {
 
         // Vérifier les colonnes requises
         const requiredColumns = ['prenom', 'nom'];
-        const headers = Object.keys(data[0]).map(k => k.toLowerCase());
+        // Correction: Vérifier si data[0] existe et est un objet
+        const firstRow = data[0] as any;
+        const headers = firstRow ? Object.keys(firstRow).map(k => k.toLowerCase()) : [];
         const missingColumns = requiredColumns.filter(col => !headers.includes(col));
 
         if (missingColumns.length > 0) {
@@ -67,10 +69,11 @@ export async function POST(req: NextRequest) {
         // Importer chaque élève
         for (const row of data) {
             try {
-                const prenom = row.prenom?.toString().trim();
-                const nom = row.nom?.toString().trim();
-                const email = row.email?.toString().trim() || `${prenom?.toLowerCase()}.${nom?.toLowerCase()}@exemple.com`;
-                const dateNaissance = row.dateNaissance ? new Date(row.dateNaissance) : null;
+                const rowData = row as any;
+                const prenom = rowData.prenom?.toString().trim();
+                const nom = rowData.nom?.toString().trim();
+                const email = rowData.email?.toString().trim() || `${prenom?.toLowerCase()}.${nom?.toLowerCase()}@exemple.com`;
+                const dateNaissance = rowData.dateNaissance ? new Date(rowData.dateNaissance) : null;
 
                 if (!prenom || !nom) {
                     errors.push(`Ligne: prénom ou nom manquant`);
@@ -138,13 +141,11 @@ export async function POST(req: NextRequest) {
                     }
                 }
             } catch (error) {
-                errors.push(`Erreur pour ${row.prenom} ${row.nom}: ${error}`);
+                const rowData = row as any;
+                errors.push(`Erreur pour ${rowData.prenom} ${rowData.nom}: ${error}`);
                 skipped++;
             }
         }
-
-        // Mise à jour de l'effectif SUPPRIMÉE car la colonne n'existe pas
-        // L'effectif sera calculé dynamiquement avec _count.eleves
 
         return NextResponse.json({
             imported,

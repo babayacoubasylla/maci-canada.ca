@@ -14,7 +14,7 @@ export default async function GererAdmissions() {
                 <BackButton />
 
                 <div className="flex justify-between items-center mb-8">
-                    <h1 className="text-3xl font-bold text-[#0f2942]">Demandes d’Admission</h1>
+                    <h1 className="text-3xl font-bold text-[#0f2942]">Demandes d&apos;Admission</h1>
                     <Button variant="outline">Exporter en Excel</Button>
                 </div>
 
@@ -44,18 +44,18 @@ export default async function GererAdmissions() {
                                         </td>
                                         <td className="p-4">
                                             <span className={`px-3 py-1 rounded-full text-sm font-medium ${demande.statut === "ACCEPTE" ? "bg-green-100 text-green-700" :
-                                                    demande.statut === "REFUSE" ? "bg-red-100 text-red-700" :
-                                                        "bg-yellow-100 text-yellow-700"
+                                                demande.statut === "REFUSE" ? "bg-red-100 text-red-700" :
+                                                    "bg-yellow-100 text-yellow-700"
                                                 }`}>
                                                 {demande.statut}
                                             </span>
                                         </td>
                                         <td className="p-4 text-right space-x-2">
-                                            <Button asChild variant="outline" size="sm">
-                                                <Link href={`/dashboard/admissions/${demande.id}`}>
+                                            <Link href={`/dashboard/admissions/${demande.id}`}>
+                                                <Button variant="outline" size="sm">
                                                     Voir
-                                                </Link>
-                                            </Button>
+                                                </Button>
+                                            </Link>
 
                                             {demande.statut === "NOUVEAU" && (
                                                 <>
@@ -77,7 +77,7 @@ export default async function GererAdmissions() {
                             ) : (
                                 <tr>
                                     <td colSpan={6} className="p-8 text-center text-slate-500">
-                                        Aucune demande d’admission pour le moment.
+                                        Aucune demande d&apos;admission pour le moment.
                                     </td>
                                 </tr>
                             )}

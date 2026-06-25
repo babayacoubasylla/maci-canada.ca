@@ -46,7 +46,6 @@ export default function ImporterEleves() {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Vérifier l'extension
         const validExtensions = ['.xlsx', '.xls'];
         const extension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
         if (!validExtensions.includes(extension)) {
@@ -54,7 +53,6 @@ export default function ImporterEleves() {
             return;
         }
 
-        // Vérifier la taille (max 5MB)
         if (file.size > 5 * 1024 * 1024) {
             setError("Le fichier est trop volumineux (max 5MB)");
             return;
@@ -78,18 +76,17 @@ export default function ImporterEleves() {
                     return;
                 }
 
-                // Vérifier les colonnes requises
                 const requiredColumns = ['prenom', 'nom'];
-                const headers = Object.keys(json[0]).map(k => k.toLowerCase());
+                // Correction : Typer json[0] comme any
+                const firstRow = json[0] as any;
+                const headers = firstRow ? Object.keys(firstRow).map(k => k.toLowerCase()) : [];
                 const missingColumns = requiredColumns.filter(col => !headers.includes(col));
 
                 if (missingColumns.length > 0) {
-                    setError(`Colonnes manquantes : ${missingColumns.join(', ')}. 
-                              Colonnes requises : prenom, nom (email et dateNaissance sont optionnels)`);
+                    setError(`Colonnes manquantes : ${missingColumns.join(', ')}. Colonnes requises : prenom, nom (email et dateNaissance sont optionnels)`);
                     return;
                 }
 
-                // Vérifier les données
                 const invalidRows = json.filter((row: any) => !row.prenom?.trim() || !row.nom?.trim());
                 if (invalidRows.length > 0) {
                     setError(`${invalidRows.length} ligne(s) ont des prénoms ou noms manquants`);
@@ -133,7 +130,6 @@ export default function ImporterEleves() {
 
             const result = await response.json();
 
-            // Afficher les erreurs si présentes
             if (result.errors && result.errors.length > 0) {
                 setSuccess(`${result.imported} élèves importés avec succès, mais ${result.errors.length} erreurs rencontrées`);
                 console.error("Erreurs d'import:", result.errors);
@@ -144,7 +140,6 @@ export default function ImporterEleves() {
             setFile(null);
             setPreview([]);
 
-            // Réinitialiser l'input file
             const fileInput = document.getElementById("file-upload") as HTMLInputElement;
             if (fileInput) fileInput.value = "";
 
@@ -167,7 +162,6 @@ export default function ImporterEleves() {
             const ws = XLSX.utils.json_to_sheet(template);
             XLSX.utils.book_append_sheet(wb, ws, "Eleves");
 
-            // Ajuster la largeur des colonnes
             ws['!cols'] = [
                 { wch: 15 },
                 { wch: 15 },
@@ -200,7 +194,6 @@ export default function ImporterEleves() {
                 </h1>
 
                 <div className="bg-white rounded-xl border shadow-sm p-8 space-y-6">
-                    {/* Instructions */}
                     <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h3 className="font-semibold text-blue-800 mb-2">
                             📋 Format attendu du fichier Excel :
@@ -214,7 +207,6 @@ export default function ImporterEleves() {
                         </ul>
                     </div>
 
-                    {/* Télécharger le template */}
                     <div>
                         <Button
                             variant="outline"
@@ -226,7 +218,6 @@ export default function ImporterEleves() {
                         </Button>
                     </div>
 
-                    {/* Sélection classe */}
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">
                             Classe d'affectation *
@@ -251,15 +242,14 @@ export default function ImporterEleves() {
                         )}
                     </div>
 
-                    {/* Upload fichier */}
                     <div className="border-2 border-dashed border-slate-200 rounded-lg p-8 text-center hover:border-[#0f2942] transition-colors">
                         <FileSpreadsheet className="w-12 h-12 mx-auto text-slate-400 mb-4" />
                         <div className="space-y-2">
                             <label
                                 htmlFor="file-upload"
                                 className={`cursor-pointer inline-flex items-center gap-2 px-4 py-2 ${classes.length === 0
-                                        ? 'bg-slate-300 cursor-not-allowed'
-                                        : 'bg-[#0f2942] hover:bg-[#1a3a5a]'
+                                    ? 'bg-slate-300 cursor-not-allowed'
+                                    : 'bg-[#0f2942] hover:bg-[#1a3a5a]'
                                     } text-white rounded-lg transition`}
                             >
                                 <Upload className="w-4 h-4" />
@@ -281,7 +271,6 @@ export default function ImporterEleves() {
                         </div>
                     </div>
 
-                    {/* Messages */}
                     {error && (
                         <div className="flex items-start gap-2 text-sm text-red-600 bg-red-50 p-3 rounded-md">
                             <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
@@ -296,7 +285,6 @@ export default function ImporterEleves() {
                         </div>
                     )}
 
-                    {/* Aperçu */}
                     {preview.length > 0 && (
                         <div>
                             <h3 className="font-semibold text-slate-700 mb-2">
@@ -339,7 +327,6 @@ export default function ImporterEleves() {
                         </div>
                     )}
 
-                    {/* Boutons */}
                     <div className="flex gap-4 pt-4">
                         <Button
                             onClick={handleImport}

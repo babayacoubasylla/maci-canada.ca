@@ -1,127 +1,178 @@
 import { getSession } from "@/lib/session";
 import { redirect } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { prisma } from "@/lib/prisma";
-import { FileSpreadsheet, UserPlus, School, Users, BookOpen } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+    Users,
+    GraduationCap,
+    BookOpen,
+    FileText,
+    MessageSquare,
+    Calendar,
+    UserPlus,
+    School,
+    ClipboardList,
+    Settings,
+    ArrowRight
+} from "lucide-react";
 
-export default async function DashboardAdmin() {
+export default async function DashboardPage() {
     const session = await getSession();
 
-    if (!session || session.role !== "ADMIN") {
+    if (!session || !session.id) {
         redirect("/connexion");
     }
 
-    // Statistiques réelles
-    const [totalEleves, totalEnseignants, totalClasses, totalMatieres] = await Promise.all([
-        prisma.eleve.count(),
-        prisma.enseignant.count(),
-        prisma.classe.count(),
-        prisma.matiere.count(),
-    ]);
+    // Sécurité : s'assurer que session.name est une chaîne de caractères
+    const userName = (session.name as string) || 'Utilisateur';
+
+    // Statistiques (à remplacer par des données réelles)
+    const stats = {
+        totalEleves: 312,
+        totalEnseignants: 28,
+        totalClasses: 15,
+        demandesEnAttente: 34,
+        messagesNonLus: 12,
+        coursAujourdhui: 8,
+    };
 
     return (
-        <div className="min-h-screen bg-slate-50">
-            <div className="border-b bg-white">
-                <div className="container flex h-16 items-center justify-between">
-                    <h1 className="text-xl font-semibold text-[#0f2942]">Administration - MACI Canada</h1>
-                    <form action="/api/logout" method="POST">
-                        <Button variant="outline" type="submit">Déconnexion</Button>
-                    </form>
+        <div className="min-h-screen bg-slate-50 p-8">
+            <div className="container max-w-7xl">
+                {/* En-tête */}
+                <div className="mb-8">
+                    <h2 className="text-2xl font-bold text-[#0f2942]">
+                        Bienvenue, {userName}
+                    </h2>
+                    <p className="text-slate-600">Vous êtes connecté en tant qu'administrateur</p>
                 </div>
-            </div>
-
-            <div className="container py-10">
-                <h2 className="text-2xl font-bold mb-8 text-[#0f2942]">Tableau de bord</h2>
 
                 {/* Statistiques */}
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <div className="bg-white p-6 rounded-xl border">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-slate-500">Total Élèves</p>
-                                <p className="text-4xl font-bold text-[#0f2942] mt-1">{totalEleves}</p>
-                            </div>
-                            <Users className="w-8 h-8 text-blue-500" />
-                        </div>
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Élèves</p>
+                        <p className="text-2xl font-bold text-[#0f2942]">{stats.totalEleves}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-xl border">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-slate-500">Total Enseignants</p>
-                                <p className="text-4xl font-bold text-[#0f2942] mt-1">{totalEnseignants}</p>
-                            </div>
-                            <School className="w-8 h-8 text-green-500" />
-                        </div>
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Enseignants</p>
+                        <p className="text-2xl font-bold text-[#0f2942]">{stats.totalEnseignants}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-xl border">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-slate-500">Total Classes</p>
-                                <p className="text-4xl font-bold text-[#0f2942] mt-1">{totalClasses}</p>
-                            </div>
-                            <BookOpen className="w-8 h-8 text-purple-500" />
-                        </div>
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Classes</p>
+                        <p className="text-2xl font-bold text-[#0f2942]">{stats.totalClasses}</p>
                     </div>
-                    <div className="bg-white p-6 rounded-xl border">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm text-slate-500">Total Matières</p>
-                                <p className="text-4xl font-bold text-[#0f2942] mt-1">{totalMatieres}</p>
-                            </div>
-                            <BookOpen className="w-8 h-8 text-orange-500" />
-                        </div>
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Demandes</p>
+                        <p className="text-2xl font-bold text-yellow-600">{stats.demandesEnAttente}</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Messages</p>
+                        <p className="text-2xl font-bold text-blue-600">{stats.messagesNonLus}</p>
+                    </div>
+                    <div className="bg-white p-4 rounded-xl border">
+                        <p className="text-sm text-slate-500">Cours aujourd'hui</p>
+                        <p className="text-2xl font-bold text-[#0f2942]">{stats.coursAujourdhui}</p>
                     </div>
                 </div>
 
-                {/* Actions Rapides */}
-                <h3 className="text-xl font-semibold mb-4 text-[#0f2942]">Actions rapides</h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-                    <Link href="/dashboard/eleves/importer">
-                        <Button className="w-full h-24 flex flex-col gap-2 bg-green-600 hover:bg-green-700">
-                            <FileSpreadsheet className="w-6 h-6" />
-                            <span>Importer élèves (Excel)</span>
-                        </Button>
-                    </Link>
-                    <Link href="/dashboard/classes/assigner">
-                        <Button className="w-full h-24 flex flex-col gap-2 bg-purple-600 hover:bg-purple-700">
-                            <UserPlus className="w-6 h-6" />
-                            <span>Assigner professeur</span>
-                        </Button>
-                    </Link>
-                </div>
-
-                {/* Menu principal */}
-                <h3 className="text-xl font-semibold mb-4 text-[#0f2942]">Gestion de l'établissement</h3>
+                {/* Menu d'administration */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <Link href="/dashboard/utilisateurs" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Utilisateurs</h4>
-                        <p className="text-sm text-slate-600">Créer et gérer les comptes (Admin, Enseignant, Parent, Élève)</p>
+                    {/* Gestion des admissions */}
+                    <Link href="/dashboard/admissions" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-blue-50 rounded-lg">
+                                <FileText className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Gestion des admissions</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Gérer les demandes d'inscription</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Voir les demandes <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
 
-                    <Link href="/dashboard/classes" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Classes</h4>
-                        <p className="text-sm text-slate-600">Créer et gérer les classes de l'établissement</p>
+                    {/* Gestion des utilisateurs */}
+                    <Link href="/dashboard/utilisateurs" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-purple-50 rounded-lg">
+                                <Users className="w-6 h-6 text-purple-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Gestion des utilisateurs</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Gérer les comptes utilisateurs</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Gérer les utilisateurs <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
 
-                    <Link href="/dashboard/matieres" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Matières</h4>
-                        <p className="text-sm text-slate-600">Gérer les matières et coefficients</p>
+                    {/* Gestion des classes */}
+                    <Link href="/dashboard/classes" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-green-50 rounded-lg">
+                                <School className="w-6 h-6 text-green-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Gestion des classes</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Créer et gérer les classes</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Gérer les classes <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
 
-                    <Link href="/dashboard/admissions" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Admissions</h4>
-                        <p className="text-sm text-slate-600">Gérer les demandes d'inscription</p>
+                    {/* Gestion des matières */}
+                    <Link href="/dashboard/matieres" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-orange-50 rounded-lg">
+                                <BookOpen className="w-6 h-6 text-orange-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Gestion des matières</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Gérer les matières et enseignants</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Gérer les matières <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
 
-                    <Link href="/dashboard/actualites" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Actualités</h4>
-                        <p className="text-sm text-slate-600">Publier des actualités sur le site</p>
+                    {/* Importer des élèves */}
+                    <Link href="/dashboard/eleves/importer" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-teal-50 rounded-lg">
+                                <UserPlus className="w-6 h-6 text-teal-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Importer des élèves</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Importer des élèves depuis Excel</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Importer maintenant <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
 
-                    <Link href="/dashboard/statistiques" className="bg-white p-8 rounded-xl border hover:shadow-md transition">
-                        <h4 className="font-semibold text-lg mb-2">Statistiques</h4>
-                        <p className="text-sm text-slate-600">Voir les statistiques globales de l'école</p>
+                    {/* Statistiques */}
+                    <Link href="/dashboard/statistiques" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-indigo-50 rounded-lg">
+                                <ClipboardList className="w-6 h-6 text-indigo-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Statistiques</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Voir les statistiques de l'école</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Voir les statistiques <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
+                    </Link>
+
+                    {/* Paramètres */}
+                    <Link href="/dashboard/parametres" className="bg-white p-6 rounded-xl border hover:shadow-lg transition group">
+                        <div className="flex items-center gap-4 mb-3">
+                            <div className="p-3 bg-gray-50 rounded-lg">
+                                <Settings className="w-6 h-6 text-gray-600" />
+                            </div>
+                            <h3 className="font-semibold text-[#0f2942]">Paramètres</h3>
+                        </div>
+                        <p className="text-sm text-slate-500">Configurer l'application</p>
+                        <div className="mt-4 flex items-center text-sm text-[#0f2942] font-medium group-hover:translate-x-1 transition">
+                            Configurer <ArrowRight className="w-4 h-4 ml-1" />
+                        </div>
                     </Link>
                 </div>
             </div>

@@ -33,12 +33,16 @@ export function Header() {
 
                 {/* Boutons */}
                 <div className="flex items-center gap-3">
-                    <Button asChild variant="outline" size="sm" className="border-[#0f2942] text-[#0f2942] hover:bg-[#0f2942] hover:text-white">
-                        <Link href="/connexion">Se connecter</Link>
-                    </Button>
-                    <Button asChild size="sm" className="bg-[#C41E3A] hover:bg-[#a01830]">
-                        <Link href="/admissions">Postuler</Link>
-                    </Button>
+                    <Link href="/connexion">
+                        <Button variant="outline" size="sm" className="border-[#0f2942] text-[#0f2942] hover:bg-[#0f2942] hover:text-white">
+                            Se connecter
+                        </Button>
+                    </Link>
+                    <Link href="/admissions">
+                        <Button size="sm" className="bg-[#C41E3A] hover:bg-[#a01830]">
+                            Postuler
+                        </Button>
+                    </Link>
                 </div>
             </div>
         </header>

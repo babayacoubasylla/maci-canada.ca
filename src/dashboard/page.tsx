@@ -9,6 +9,9 @@ export default async function DashboardAdmin() {
         redirect("/connexion");
     }
 
+    // Sécurité : s'assurer que session.name est une chaîne de caractères
+    const userName = (session.name as string) || "Utilisateur";
+
     return (
         <div className="min-h-screen bg-slate-50">
             {/* Header */}
@@ -24,16 +27,16 @@ export default async function DashboardAdmin() {
             <div className="container py-10">
                 <div className="mb-8">
                     <h2 className="text-2xl font-bold text-[#0f2942]">
-                        Bienvenue, {session.name}
+                        Bienvenue, {userName}
                     </h2>
-                    <p className="text-slate-600">Vous êtes connecté en tant qu’administrateur.</p>
+                    <p className="text-slate-600">Vous êtes connecté en tant qu&apos;administrateur.</p>
                 </div>
 
                 {/* Statistiques */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
                     {[
                         { titre: "Utilisateurs", valeur: "248" },
-                        { titre: "Demandes d’admission", valeur: "34" },
+                        { titre: "Demandes d&apos;admission", valeur: "34" },
                         { titre: "Articles publiés", valeur: "12" },
                         { titre: "Messages non lus", valeur: "7" },
                     ].map((stat, i) => (

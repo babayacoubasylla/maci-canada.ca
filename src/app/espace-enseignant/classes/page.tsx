@@ -52,16 +52,12 @@ export default function MesClasses() {
                             </div>
 
                             <div className="mt-6 flex gap-3">
-                                <Button asChild variant="outline" className="flex-1">
-                                    <Link href={`/espace-enseignant/classes/${classe.id}/eleves`}>
-                                        Voir les élèves
-                                    </Link>
-                                </Button>
-                                <Button asChild className="flex-1 bg-[#C41E3A]">
-                                    <Link href={`/espace-enseignant/classes/${classe.id}/devoirs`}>
-                                        Gérer les devoirs
-                                    </Link>
-                                </Button>
+                                <Link href={`/espace-enseignant/classes/${classe.id}/eleves`} className="flex-1">
+                                    <Button variant="outline" className="w-full">Voir les élèves</Button>
+                                </Link>
+                                <Link href={`/espace-enseignant/classes/${classe.id}/devoirs`} className="flex-1">
+                                    <Button className="w-full bg-[#C41E3A]">Gérer les devoirs</Button>
+                                </Link>
                             </div>
                         </div>
                     ))}

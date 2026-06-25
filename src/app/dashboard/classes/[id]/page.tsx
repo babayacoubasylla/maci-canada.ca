@@ -38,11 +38,11 @@ export default async function ClasseDetails({ params }: Props) {
                             {classe.niveau} • Année {classe.anneeScolaire}
                         </p>
                     </div>
-                    <Button asChild className="bg-[#C41E3A]">
-                        <Link href={`/dashboard/classes/${classe.id}/ajouter-eleve`}>
+                    <Link href={`/dashboard/classes/${classe.id}/ajouter-eleve`}>
+                        <Button className="bg-[#C41E3A]">
                             + Ajouter un élève
-                        </Link>
-                    </Button>
+                        </Button>
+                    </Link>
                 </div>
 
                 {/* Liste des élèves */}

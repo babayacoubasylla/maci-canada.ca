@@ -13,9 +13,9 @@ export default function DevoirsClasse() {
                         <h1 className="text-3xl font-bold text-[#0f2942]">Devoirs - 6ème A</h1>
                         <p className="text-slate-600">Gérer les devoirs de la classe</p>
                     </div>
-                    <Button asChild className="bg-[#C41E3A]">
-                        <Link href="/espace-enseignant/devoirs/creer">+ Nouveau devoir</Link>
-                    </Button>
+                    <Link href="/espace-enseignant/devoirs/creer">
+                        <Button className="bg-[#C41E3A]">+ Nouveau devoir</Button>
+                    </Link>
                 </div>
 
                 <div className="bg-white rounded-xl border p-8">

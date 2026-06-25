@@ -20,9 +20,9 @@ export default async function GestionClasses() {
 
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-[#0f2942]">Gestion des Classes</h1>
-                    <Button asChild className="bg-[#C41E3A]">
-                        <Link href="/dashboard/classes/nouveau">+ Créer une classe</Link>
-                    </Button>
+                    <Link href="/dashboard/classes/nouveau">
+                        <Button className="bg-[#C41E3A]">+ Créer une classe</Button>
+                    </Link>
                 </div>
 
                 <div className="bg-white rounded-xl border overflow-hidden">
@@ -45,11 +45,11 @@ export default async function GestionClasses() {
                                         <td className="p-4">{classe.anneeScolaire}</td>
                                         <td className="p-4">{classe._count.eleves}</td>
                                         <td className="p-4 text-right space-x-2">
-                                            <Button asChild variant="outline" size="sm">
-                                                <Link href={`/dashboard/classes/${classe.id}/edit`}>Modifier</Link>
-                                            </Button>
+                                            <Link href={`/dashboard/classes/${classe.id}/edit`}>
+                                                <Button variant="outline" size="sm">Modifier</Button>
+                                            </Link>
 
-                                            <form action={`/api/classes/${classe.id}/delete`} method="POST">
+                                            <form action={`/api/classes/${classe.id}/delete`} method="POST" className="inline">
                                                 <Button
                                                     type="submit"
                                                     variant="destructive"

@@ -29,7 +29,7 @@ export async function POST(request: Request) {
         await prisma.devoir.create({
             data: {
                 titre,
-                description: description || null,
+                description: description || "", // Changé de null à ""
                 fichierUrl,
                 dateLimite: new Date(dateLimite),
                 classeId,

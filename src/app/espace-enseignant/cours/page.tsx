@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function MesCours() {
-    // Plus tard, ces données viendront de la base de données
     const cours = [
         {
             id: "1",
@@ -32,9 +31,9 @@ export default function MesCours() {
             <div className="container py-10">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-[#0f2942]">Mes Cours</h1>
-                    <Button asChild className="bg-[#C41E3A]">
-                        <Link href="/espace-enseignant/cours/publier">+ Publier un cours</Link>
-                    </Button>
+                    <Link href="/espace-enseignant/cours/publier">
+                        <Button className="bg-[#C41E3A]">+ Publier un cours</Button>
+                    </Link>
                 </div>
 
                 {cours.length > 0 ? (
@@ -48,8 +47,8 @@ export default function MesCours() {
                                             <p className="text-sm text-slate-500">{coursItem.matiere} • {coursItem.classe}</p>
                                         </div>
                                         <span className={`px-3 py-1 text-xs rounded-full ${coursItem.type === "pdf"
-                                                ? "bg-red-100 text-red-700"
-                                                : "bg-blue-100 text-blue-700"
+                                            ? "bg-red-100 text-red-700"
+                                            : "bg-blue-100 text-blue-700"
                                             }`}>
                                             {coursItem.type === "pdf" ? "PDF" : "Image"}
                                         </span>
@@ -67,10 +66,10 @@ export default function MesCours() {
                     </div>
                 ) : (
                     <div className="bg-white p-12 rounded-xl border text-center">
-                        <p className="text-slate-500">Vous n’avez publié aucun cours pour le moment.</p>
-                        <Button asChild className="mt-6 bg-[#C41E3A]">
-                            <Link href="/espace-enseignant/cours/publier">Publier mon premier cours</Link>
-                        </Button>
+                        <p className="text-slate-500">Vous n'avez publié aucun cours pour le moment.</p>
+                        <Link href="/espace-enseignant/cours/publier">
+                            <Button className="mt-6 bg-[#C41E3A]">Publier mon premier cours</Button>
+                        </Link>
                     </div>
                 )}
             </div>

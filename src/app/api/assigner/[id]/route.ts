@@ -4,7 +4,7 @@ import { getSession } from "@/lib/session";
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
         const session = await getSession();
@@ -12,8 +12,11 @@ export async function DELETE(
             return NextResponse.json({ error: "Non autorisé" }, { status: 401 });
         }
 
+        // ⚠️ Important : on attend la résolution de la promesse
+        const { id } = await params;
+
         await prisma.classeEnseignant.delete({
-            where: { id: params.id },
+            where: { id: id },
         });
 
         return NextResponse.json({ message: "Supprimé avec succès" });

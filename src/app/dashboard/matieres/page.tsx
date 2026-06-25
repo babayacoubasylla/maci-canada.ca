@@ -24,27 +24,10 @@ export default async function GestionMatieres() {
                     }
                 }
             },
-            // Temporairement commenté pour éviter l'erreur
-            // classes: {
-            //     include: {
-            //         classe: true,
-            //         enseignant: {
-            //             include: {
-            //                 user: {
-            //                     select: {
-            //                         prenom: true,
-            //                         nom: true,
-            //                     }
-            //                 }
-            //             }
-            //         }
-            //     }
-            // },
             _count: {
                 select: {
                     cours: true,
                     devoirs: true,
-                    // classes: true, // Commenté aussi
                 }
             }
         },
@@ -97,11 +80,11 @@ export default async function GestionMatieres() {
                                         <td className="p-4">{matiere._count.cours}</td>
                                         <td className="p-4">{matiere._count.devoirs}</td>
                                         <td className="p-4 text-right space-x-2">
-                                            <Button asChild variant="outline" size="sm">
-                                                <Link href={`/dashboard/matieres/${matiere.id}/edit`}>
+                                            <Link href={`/dashboard/matieres/${matiere.id}/edit`}>
+                                                <Button variant="outline" size="sm">
                                                     Modifier
-                                                </Link>
-                                            </Button>
+                                                </Button>
+                                            </Link>
                                             <Button
                                                 variant="destructive"
                                                 size="sm"

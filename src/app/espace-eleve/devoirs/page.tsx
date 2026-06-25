@@ -38,9 +38,9 @@ export default function MesDevoirs() {
                                     </td>
                                     <td className="p-4 text-right">
                                         {d.statut === "À rendre" ? (
-                                            <Button asChild className="bg-[#C41E3A]">
-                                                <Link href={`/espace-eleve/devoirs/${d.id}/rendre`}>Rendre</Link>
-                                            </Button>
+                                            <Link href={`/espace-eleve/devoirs/${d.id}/rendre`}>
+                                                <Button className="bg-[#C41E3A]">Rendre</Button>
+                                            </Link>
                                         ) : (
                                             <Button variant="outline" size="sm">Voir ma copie</Button>
                                         )}

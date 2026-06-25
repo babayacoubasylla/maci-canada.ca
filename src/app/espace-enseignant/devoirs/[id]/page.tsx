@@ -43,11 +43,9 @@ export default function CopiesDevoir() {
                                         <Button variant="outline" size="sm">Voir la copie</Button>
 
                                         {s.note === null && (
-                                            <Button asChild size="sm" className="bg-[#C41E3A]">
-                                                <Link href={`/espace-enseignant/devoirs/1/noter/${s.id}`}>
-                                                    Noter
-                                                </Link>
-                                            </Button>
+                                            <Link href={`/espace-enseignant/devoirs/1/noter/${s.id}`}>
+                                                <Button size="sm" className="bg-[#C41E3A]">Noter</Button>
+                                            </Link>
                                         )}
                                     </td>
                                 </tr>

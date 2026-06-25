@@ -19,12 +19,16 @@ export default function Accueil() {
             du préscolaire au secondaire.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild size="lg" className="bg-white text-[#0f2942] hover:bg-slate-100">
-              <Link href="/admissions">Postuler maintenant</Link>
-            </Button>
-            <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#0f2942]">
-              <Link href="#apropos">En savoir plus</Link>
-            </Button>
+            <Link href="/admissions">
+              <Button size="lg" className="bg-white text-[#0f2942] hover:bg-slate-100">
+                Postuler maintenant
+              </Button>
+            </Link>
+            <Link href="#apropos">
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-[#0f2942]">
+                En savoir plus
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -189,9 +193,11 @@ export default function Accueil() {
           Les inscriptions sont ouvertes. Rejoignez une communauté éducative
           dynamique et bienveillante.
         </p>
-        <Button asChild size="lg" className="bg-[#C41E3A] hover:bg-[#a01830]">
-          <Link href="/admissions">Commencer ma demande d'admission</Link>
-        </Button>
+        <Link href="/admissions">
+          <Button size="lg" className="bg-[#C41E3A] hover:bg-[#a01830]">
+            Commencer ma demande d'admission
+          </Button>
+        </Link>
       </section>
 
       {/* ==================== GALERIE / MOMENTS MARQUANTS ==================== */}
@@ -218,12 +224,16 @@ export default function Accueil() {
             Notre équipe est à votre disposition.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild variant="outline" className="border-white text-white hover:bg-white hover:text-[#0f2942]">
-              <Link href="/contact">Accéder au formulaire de contact</Link>
-            </Button>
-            <Button asChild className="bg-[#C41E3A] hover:bg-[#a01830] border-0">
-              <Link href="tel:+2252722498383">📞 Nous appeler</Link>
-            </Button>
+            <Link href="/contact">
+              <Button variant="outline" className="border-white text-white hover:bg-white hover:text-[#0f2942]">
+                Accéder au formulaire de contact
+              </Button>
+            </Link>
+            <Link href="tel:+2252722498383">
+              <Button className="bg-[#C41E3A] hover:bg-[#a01830] border-0">
+                📞 Nous appeler
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
@@ -233,9 +243,11 @@ export default function Accueil() {
         <div className="container">
           <h2 className="text-3xl font-bold text-[#0f2942]">Rejoignez la famille MACI Canada</h2>
           <p className="mt-3 text-lg text-slate-600">Les inscriptions pour l'année 2025-2026 sont ouvertes.</p>
-          <Button asChild size="lg" className="mt-6 bg-[#C41E3A] hover:bg-[#a01830]">
-            <Link href="/admissions">Commencer ma demande d'admission</Link>
-          </Button>
+          <Link href="/admissions">
+            <Button size="lg" className="mt-6 bg-[#C41E3A] hover:bg-[#a01830]">
+              Commencer ma demande d'admission
+            </Button>
+          </Link>
         </div>
       </section>
 

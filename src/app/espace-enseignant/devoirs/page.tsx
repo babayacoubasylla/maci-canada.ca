@@ -31,9 +31,9 @@ export default function MesDevoirs() {
             <div className="container py-10">
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-3xl font-bold text-[#0f2942]">Mes Devoirs</h1>
-                    <Button asChild className="bg-[#C41E3A]">
-                        <Link href="/espace-enseignant/devoirs/creer">+ Créer un devoir</Link>
-                    </Button>
+                    <Link href="/espace-enseignant/devoirs/creer">
+                        <Button className="bg-[#C41E3A]">+ Créer un devoir</Button>
+                    </Link>
                 </div>
 
                 <div className="bg-white rounded-xl border overflow-hidden">
@@ -57,11 +57,9 @@ export default function MesDevoirs() {
                                     <td className="p-4 text-sm">{devoir.soumissions}/{devoir.totalEleves}</td>
                                     <td className="p-4 text-sm">{devoir.corriges}</td>
                                     <td className="p-4 text-right">
-                                        <Button asChild variant="outline" size="sm">
-                                            <Link href={`/espace-enseignant/devoirs/${devoir.id}`}>
-                                                Voir les copies
-                                            </Link>
-                                        </Button>
+                                        <Link href={`/espace-enseignant/devoirs/${devoir.id}`}>
+                                            <Button variant="outline" size="sm">Voir les copies</Button>
+                                        </Link>
                                     </td>
                                 </tr>
                             ))}
